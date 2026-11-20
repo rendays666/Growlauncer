@@ -55,3 +55,11 @@ Kalau `currentState` sama dengan pemanggilan sebelumnya DAN tool sama, `stuckCou
 
 ## Global state
 `tool`, `itool`, `failCount`, `lastTool`, `lastState`, `stuckCount` (di `config.lua`), `currentState` (diisi di `surg`).
+
+## Varian: auto_surg_v1.0_beta (`raw/sorted/auto_surg_v1.0_beta.lua`)
+Versi lama dari script yang sama (Auto Surg V1.0, 264 baris). Logic dan mekanisme sama, TIDAK dipecah ke src. Selisih dengan V1.1 (dibandingkan baris per baris):
+1. **Anti-stuck:** hanya `tool == lastTool` (tanpa `lastState`/`currentState`). Pemakaian tool yang sah berulang (mis. Scalpel untuk beberapa sayatan) ikut dihitung macet.
+2. **Heart stopped:** tidak mengecek tombol `tool4312`.
+3. **Anesthesia:** kondisi `wakes up or screams or flails or Awake and tool1262`. Karena `and` lebih kuat dari `or`, hanya `Awake` yang mensyaratkan tombol 1262; tiga yang lain jalan tanpa cek tombol. `Coming to` dipisah ke aturan sendiri. (V1.1 memperbaikinya.)
+4. **Bleeding:** tiga cabang (`very quickly` / `slowly` / lainnya) dengan isi identik. V1.1 menyatukannya.
+5. Selain itu aturan 4-14 identik.
