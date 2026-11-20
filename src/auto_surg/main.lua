@@ -2,7 +2,7 @@
 -- Tujuan : tampilkan peringatan ke pemain, lalu daftarkan surg() ke event OnVariant
 -- Dependensi: detect.lua (surg), API loader: sendDialog, LogToConsole, growtopia.notify, AddHook
 -- Urutan load: 4 (terakhir)
--- Sumber : raw/auto_surg_v1.1_fixed.lua baris 1, 10-18, 245 (salinan verbatim)
+-- Sumber : raw/sorted/auto_surg_v1.1_fixed.lua baris 1, 10-18, 245 (salinan verbatim)
 -- Beda urutan dari raw: dialog/log pembuka dijalankan SETELAH fungsi didefinisikan
 -- (tidak berpengaruh karena definisi fungsi tidak punya efek samping)
 

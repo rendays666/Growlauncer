@@ -3,7 +3,7 @@
 -- Dipanggil: AddHook(surg, "OnVariant") di main.lua
 -- Dependensi: tools.lua (auto), config.lua (failCount), API loader: SendPacket, LogToConsole
 -- Urutan load: 3
--- Sumber : raw/auto_surg_v1.1_fixed.lua baris 79-243 (salinan verbatim)
+-- Sumber : raw/sorted/auto_surg_v1.1_fixed.lua baris 79-243 (salinan verbatim)
 -- Aturan: pertama yang cocok menang. Tabel lengkap ada di notes/auto_surg.md
 -- CATATAN: lihat notes/bugs.md #2 dan #3
 

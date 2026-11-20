@@ -7,14 +7,19 @@
 1. Cari modul yang relevan di tabel bawah.
 2. Buka `notes/<modul>.md` untuk penjelasan (fungsi, cara panggil, mekanisme, gotcha).
 3. Buka `src/<modul>/` hanya kalau perlu edit/lihat kodenya.
-4. `raw/` = script asli, arsip, tidak diubah.
+4. `raw/` = script asli, arsip, tidak diubah. `raw/sorted/` sudah diproses, `raw/inbox/` belum.
 5. Masalah yang sudah diketahui ada di `notes/bugs.md`.
+
+## Kalau user bilang "ada yang baru di inbox"
+1. `ls raw/inbox/` dan baca `raw/MANIFEST.md`.
+2. Ikuti aturan di `raw/README.md` (cek hash, varian atau logic baru, jangan dobel).
+3. Pindahkan ke `raw/sorted/`, update MANIFEST, tabel di bawah, dan changelog.
 
 ## Script yang terdaftar
 
 | Script | Raw | Notes | Platform | Tujuan |
 |--------|-----|-------|----------|--------|
-| auto_surg | `raw/auto_surg_v1.1_fixed.lua` | `notes/auto_surg.md` | Growtopia Lua | Auto Surgery bot (by Moeyii) |
+| auto_surg | `raw/sorted/auto_surg_v1.1_fixed.lua` | `notes/auto_surg.md` | Growtopia Lua | Auto Surgery bot (by Moeyii) |
 
 ## Modul per script
 
@@ -36,3 +41,4 @@
 ## Changelog
 - 2026-11-19: kerangka repo dibuat (struktur kosong).
 - 2026-11-19: script pertama masuk: auto_surg (raw + dipecah 4 file + notes + bugs).
+- 2026-11-19: raw/ dibagi jadi inbox/ (belum disortir) dan sorted/ (sudah), plus MANIFEST.md dan aturan anti-duplikasi.

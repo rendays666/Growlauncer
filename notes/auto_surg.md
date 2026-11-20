@@ -1,7 +1,7 @@
 # auto_surg
 
 **Tujuan:** Bot otomatis untuk mini-game Surgery di Growtopia. Membaca dialog bedah, memilih tool yang tepat, mengirim klik tombol lewat packet, dan restart otomatis kalau pasien gagal.
-**Sumber:** `raw/auto_surg_v1.1_fixed.lua` (Auto Surg V1.1 Fixed, by Moeyii, 245 baris)
+**Sumber:** `raw/sorted/auto_surg_v1.1_fixed.lua` (Auto Surg V1.1 Fixed, by Moeyii, 245 baris)
 **File (urutan load):** `config` → `tools` → `detect` → `main` di `src/auto_surg/`
 **Platform:** Lua loader Growtopia (bukan Roblox). API yang dipakai: `sendDialog`, `LogToConsole`, `growtopia.notify`, `SendPacket`, `AddHook`.
 

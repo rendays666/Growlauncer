@@ -3,7 +3,7 @@
 -- Dipanggil: detect.lua (surg) setelah mengisi `tool`
 -- Dependensi: config.lua (state), API loader: SendPacket, LogToConsole
 -- Urutan load: 2
--- Sumber : raw/auto_surg_v1.1_fixed.lua baris 20-77 (salinan verbatim)
+-- Sumber : raw/sorted/auto_surg_v1.1_fixed.lua baris 20-77 (salinan verbatim)
 -- CATATAN: lihat notes/bugs.md #1 (itool dihitung sebelum anti-stuck)
 
 function auto()
