@@ -48,7 +48,7 @@ Pola memakai pattern Lua: `(.+)` penangkap sisa teks, `(%d+)` angka. Kode warna 
 
 ## Varian: surg_exact_ceximo_edit (Edit Ceximo Auto Surgery)
 Aturannya SAMA dengan DFNL5 (dibandingkan baris per baris). Selisihnya hanya:
-1. **API huruf kecil:** `sendPacket(...)` dan `log(...)` (DFNL5: `SendPacket`, `LogToConsole`). Label log `PixelMorph_`. Artinya target loader berbeda (lihat growtopia_api.md).
+1. **API huruf kecil:** `sendPacket(...)` dan `log(...)` (DFNL5: `SendPacket`, `LogToConsole`). Label log `PixelMorph_`. Di GrowLauncher kedua ejaan sama-sama ada (lihat `notes/growtopia_api.md`), jadi ini bukan tanda loader lain.
 2. **Aturan robot:** dialog `Are you sure you want to perform surgery on this robot?...` + tombol 4316 memanggil `auto1()`. Fungsi `auto1` TIDAK didefinisikan di mana pun. Lihat bugs.md.
 3. **Aturan jantung tambahan:** `Status: The patient's heart has stopped!` + 4312 → Defibrillator (selain `Status: `4Heart stopped!`).
 4. **`Sleep(100)`** disisipkan sebelum `auto()` pada aturan `Patient broke his arm.`.

@@ -24,7 +24,13 @@
 | Penasihat surgery (HUD, bukan bot), pelacak bius, riwayat | `surg_helper_zayn` | `notes/surg_helper_zayn.md` |
 | Bersihkan seluruh world | `auto_clear` | `notes/auto_clear.md` |
 | Beli pack lewat packet + drop anti-retake | `auto_buy_pack` | `notes/auto_buy_pack.md` |
-| Nama fungsi loader, format packet | (lintas script) | `notes/growtopia_api.md` |
+| Nama fungsi launcher, format packet, clipboard, ImGui | (lintas script) | `notes/growtopia_api.md` (daftar penuh: `notes/launcher_api_dump_2026-11-21.txt`) |
+
+## Fakta cepat GrowLauncher (dari dump API 2026-11-21)
+- Lua **5.4**. Hampir semua fungsi punya dua ejaan (`SendPacket`/`sendPacket`, dst), keduanya bekerja.
+- Clipboard: `ImGui.SetClipboardText(text)` / `ImGui.GetClipboardText()`.
+- `writeToLocal(file, text)` ada, folder tujuannya belum diketahui. Tidak ada fungsi baca file bernama jelas.
+- `getWorld()` dan `getObjects()` TIDAK ada (script Boren hanya memakainya sebagai cadangan).
 
 ## Script yang terdaftar
 | Modul | Raw (`raw/sorted/`) | Src | Platform | Oleh |
@@ -57,3 +63,4 @@
 - 2026-11-19: script pertama masuk: auto_surg (raw + dipecah 4 file + notes + bugs).
 - 2026-11-19: raw/ dibagi jadi inbox/ (belum disortir) dan sorted/ (sudah), plus MANIFEST.md dan aturan anti-duplikasi.
 - 2026-11-20: 6 script dari inbox diproses: auto_surg_v1.0_beta (varian), surg_exact + Ceximo (varian), surg_helper_zayn, auto_clear, auto_buy_pack. Tambah notes/growtopia_api.md.
+- 2026-11-21: dump API launcher disimpan (`notes/launcher_api_dump_2026-11-21.txt`); `growtopia_api.md` ditulis ulang berdasarkan dump. Koreksi: beda huruf (`sendPacket` vs `SendPacket`) bukan tanda loader berbeda.
