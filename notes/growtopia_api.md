@@ -1,7 +1,7 @@
 # growtopia_api — API GrowLauncher dan packet
 
 Sumber kebenaran: dump API dari launcher asli, `notes/launcher_api_dump_2026-11-21.txt` (diambil lewat Debug Logger `/dbg api`, disimpan apa adanya). **Lua 5.4.**
-Dump hanya memuat global yang bertipe function/table/userdata dan melewati library standar (`string`, `table`, `math`, `os`, `io`, dst), jadi ketersediaan `io.open` dan `os.*` belum diketahui. Versi launcher belum dicatat (`growlauncher.getVersion()` ada, tinggal dipanggil di dump berikutnya).
+Dump hanya memuat global yang bertipe function/table/userdata dan melewati library standar (`string`, `table`, `math`, `os`, `io`, dst), jadi ketersediaan `io.open` dan `os.*` belum diketahui. Versi launcher belum dicatat (`growlauncher.getVersion()` ada, tinggal dipanggil di dump berikutnya). Dokumentasi resmi (GrowLauncher 7.0.38) diringkas di `notes/launcher_docs.md`; dump menang kalau berbeda (mis. `bindValue` ada di dump, tidak di dokumentasi).
 
 ## Fakta dari dump
 
@@ -9,13 +9,14 @@ Dump hanya memuat global yang bertipe function/table/userdata dan melewati libra
 Hampir semua fungsi ada dalam dua ejaan (PascalCase dan camelCase) dan keduanya bekerja. Beda huruf di antara script TIDAK berarti loader berbeda.
 - **Berpasangan (26):** AddHook/addHook, ApplyHook/applyHook, EditToggle/editToggle, FindItemID/findItemID, FindPath/findPath, GetGems/getGems, GetInventory/getInventory, GetItemInfoByID/getItemInfoByID, GetItemInfoByName/getItemInfoByName, GetLocal/getLocal, GetNPCList/getNPCList, GetObjectList/getObjectList, GetPath/getPath, GetPing/getPing, GetPlayerList/getPlayerList, GetTile/getTile, GetTiles/getTiles, LogToConsole/logToConsole, RemoveHook/removeHook, SearchItems/searchItems, SendPacket/sendPacket, SendPacketRaw/sendPacketRaw, SendVariant/sendVariant, SetLogin/setLogin, SetLoginEnabled/setLoginEnabled, Sleep/sleep.
 - **Hanya PascalCase:** AddHookCallback, CallHookCallback, RemoveHookCallback, CSleep, GetWorldName, NewDrawList, SetPathFlag, ImVec2, ImVec4.
+- **Alias bukan ejaan (dari dokumentasi):** `editValue` = `editToggle` (fungsi sama), `localPlayer` = `GetLocal`, `getCurrentWorldName` = `GetWorldName`, `createPlayer` = `SetPathFlag`. Daftar lengkap di `launcher_docs.md`.
 - **Hanya camelCase (selain fungsi standar Lua):** addCategory, addIntoModule, addShortcut, removeShortcut, await, bindValue, getValue, setValue, editValue, createPlayer, dumpTable, executeFromAssets, fetch, getAppLibrary, getCurrentWorldName, getDiscordID, getItemInfoManager, getPlayerByNetID, getTime, getWorldTileMap, isInside, load, localPlayer, log, logDebug, warn, randomCSleep, randomSleep, requireModule, runCoroutine, runThread, waitUntil, sendDialog, sendNotification, setBg, setFg, setMinimum, split, writeToLocal.
-- Ejaan nama event hook juga longgar: `"OnVariant"`, `"onVariant"`, `"onvariant"` semuanya dipakai oleh script yang berjalan. Kemungkinan tidak peka huruf besar-kecil (belum diuji langsung).
+- Nama event hook: dokumentasi menyatakan dispatcher native membandingkan nama sebagai huruf kecil, jadi daftarkan dengan huruf kecil (`onvariant`). Script lama memakai `"OnVariant"`/`"onVariant"` dan tetap berjalan, jadi huruf besar kemungkinan dinormalkan; jangan diandalkan di script baru.
 
 ### Tabel dan objek
 | Nama | Isi |
 |------|-----|
-| `growtopia` | checkInventory, checkInventoryCount, confirmDropItem, dropItem, enter, enterGateway, enterPos, getItemID, getItemName, isOnPos, notify, notifyCenter, sendChat, sendDialog, setWeather, tileChange, warpTo |
+| `growtopia` (16 fungsi, tanda tangan di `launcher_docs.md`) | checkInventory, checkInventoryCount, confirmDropItem, dropItem, enter, enterGateway, enterPos, getItemID, getItemName, isOnPos, notify, notifyCenter, sendChat, sendDialog, setWeather, tileChange, warpTo |
 | `growlauncher` | getVersion(), getVersionInt(), version |
 | `tile` | getTile, setBg, setFg |
 | `itemInfoManager` | getItemInfoByID, getItemInfoByName |
@@ -25,7 +26,7 @@ Hampir semua fungsi ada dalam dua ejaan (PascalCase dan camelCase) dan keduanya 
 | `ImGui` | Dear ImGui lengkap (Begin/End, Button, Text, InputText, InputTextMultiline, Checkbox, Combo, tabel, popup, dst). Daftar penuh di file dump |
 
 ### Yang tidak ada
-`getWorld()`, `getObjects()`, `EditValue`, dan fungsi baca file bernama jelas (mis. `readFromLocal`) TIDAK ada di global. Script Boren hanya memakainya sebagai cadangan. `Preferences` bukan global; dimuat lewat `require("preferences")`.
+`getWorld()`, `getObjects()`, `EditValue` (huruf besar; yang ada `editValue`), dan fungsi baca file bernama jelas (mis. `readFromLocal`) TIDAK ada di global. Script Boren hanya memakainya sebagai cadangan. `Preferences` bukan global; dimuat lewat `require("preferences")`.
 
 ### Clipboard (penting)
 `ImGui.SetClipboardText(text)` dan `ImGui.GetClipboardText()` ada. Ini jalur Copy All yang benar. Belum dites dipanggil dari callback UI (`OnValue`), di luar loop gambar ImGui.
@@ -69,7 +70,18 @@ Ada juga `ImGui.InputTextMultiline` dan `ImGui.LogToClipboard` untuk jendela ImG
 | Gems / inventaris / objek | `getGems()`, `getInventory()`, `getObjectList()` | auto_buy_pack |
 | Drop | `growtopia.confirmDropItem(id, amt)` | auto_buy_pack |
 
-Argumen hook `OnVariant`: `var.v1` (nama variant, mis. `OnDialogRequest`, `OnConsoleMessage`), `var.v2` (isi teks), `var.v3` (dipakai Boren). Return `true` dipakai script (Boren, Zayn) untuk menelan event; efek pastinya belum diuji langsung. Hook kirim: `OnSendPacket(ptype, str)` dan `OnSendPacketRaw(pkt)`, juga dipakai Boren dengan return `true` untuk memblok.
+### Hook (ringkas; detail `launcher_docs.md`)
+| Hook | Callback |
+|------|----------|
+| `onvariant` | `(var, pkt)`; `var.v1` nama variant (`OnDialogRequest`, `OnConsoleMessage`, ...), `var.v2` isi teks, `var.v3` dipakai Boren |
+| `ongamepacket` | `(pkt)` paket game dari server (setara "GameTankUpdate" di debug bawaan) |
+| `onsendpacket` | `(type, pkt:string)` |
+| `onsendpacketraw` | `(pkt)` |
+| `onvalue` | `(type, name, value)` (setara "Value Debugger") |
+| `ondraw` / `ondrawimgui` | `(deltaTime)` |
+| `ondialog` | `(title, alias, isAccepted)` |
+
+`return true` dipakai script (Boren, Zayn, Debug Logger) untuk menelan event; dokumentasi tidak menjelaskan semantik return, efek pastinya belum terbukti. Daftarkan dengan huruf kecil + `applyHook()`.
 
 ## Packet (format string yang dikirim)
 | Aksi | Packet |
@@ -81,17 +93,17 @@ Argumen hook `OnVariant`: `var.v1` (nama variant, mis. `OnDialogRequest`, `OnCon
 | Drop item | `sendPacket(2, "action|drop\n|itemID|<id>\n")` |
 | Jawab dialog drop | `sendPacket(2, "action|dialog_return\ndialog_name|<nama>\nitemID|<id>|\ncount|<n>\n")` |
 | Wrench pemain (terlihat di debug launcher) | `action|wrench\n|netid|<id>` |
-| Chat (ASUMSI, belum terbukti di launcher ini; dipakai perintah `/dbg` di Debug Logger) | `action|input\n|text|<pesan>` |
+| Chat lewat packet (ASUMSI, belum terbukti; dipakai perintah `/dbg` di Debug Logger). Jalur resmi: `growtopia.sendChat(text, toClient?)` | `action|input\n|text|<pesan>` |
 
 ## Packet mentah (`sendPacketRaw(false, {...})`)
 | Aksi | Tabel |
 |------|-------|
-| Pukul tile | `{type=3, value=18, x=posX, y=posY, px=tileX, py=tileY}` |
+| Pukul tile (type 3 = TILE_CHANGE_REQUEST, value 18 = Fist) | `{type=3, value=18, x=posX, y=posY, px=tileX, py=tileY}` |
 | Hadap arah | `{type=0, state=48 (kiri) / 32 (kanan), x=tileX*32, y=tileY*32}` |
-| Packet collect (diblok di `onSendPacketRaw`) | `type == 11` |
+| Packet collect (diblok di `onsendpacketraw`; 11 = ITEM_ACTIVATE_OBJECT_REQUEST) | `type == 11` |
 
 ## Format debug bawaan launcher
-Variant: `[<nama>] param 0: <nama>` lalu `param 1: ...`, dst. Paket kirim ditampilkan mentah. Debug Logger memakai format yang sama supaya hasilnya bisa dibandingkan.
+Variant: `[<nama>] param 0: <nama>` lalu `param 1: ...`, dst. Paket kirim ditampilkan mentah. `tools/debug_logger.lua` memakai format yang sama supaya hasilnya bisa dibandingkan (lihat `notes/debug_logger.md`). Debug bawaan launcher hanya bisa menyalin satu entri; pembaca log lewat API tidak ditemukan di dump.
 
 ## ID tool surgery
 Ada di `notes/auto_surg.md`. Antiseptic 1264 hanya dipakai `surg_helper_zayn`.

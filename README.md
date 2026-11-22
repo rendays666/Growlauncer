@@ -6,4 +6,5 @@ Basis pengetahuan script yang disusun agar AI bisa bekerja efisien tanpa membaca
 - `INDEX.md` — peta utama, baca dulu
 - `raw/` — script asli (tidak diubah)
 - `src/` — script dipecah per logic
-- `notes/` — catatan per modul
+- `notes/` — catatan per modul, API, dokumentasi launcher, bug
+- `tools/` — alat buatan sendiri (Debug Logger) beserta tes

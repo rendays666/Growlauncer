@@ -8,7 +8,8 @@
 2. Buka `notes/<modul>.md` (mekanisme, aturan, gotcha). Biasanya cukup sampai sini.
 3. Buka `src/<modul>/` hanya untuk melihat atau mengedit kodenya. Segmen bernomor, header tiap file menjelaskan isinya.
 4. `raw/sorted/` = script asli utuh (arsip, tidak diubah). `raw/inbox/` = belum diproses.
-5. Masalah yang sudah diketahui: `notes/bugs.md`. API dan packet: `notes/growtopia_api.md`.
+5. Masalah yang sudah diketahui: `notes/bugs.md`. API dan packet: `notes/growtopia_api.md` (ringkas) dan `notes/launcher_docs.md` (dokumentasi resmi: hook, alias, enum packet).
+6. `tools/` = alat buatan sendiri (bukan script user lain), mis. Debug Logger.
 
 ## Kalau user bilang "ada yang baru di inbox"
 1. Tarik versi terbaru dari GitHub (user mengunggah langsung ke repo). Kalau history berubah (forced update), bandingkan dulu, jangan menimpa commit lokal tanpa cadangan.
@@ -25,11 +26,15 @@
 | Bersihkan seluruh world | `auto_clear` | `notes/auto_clear.md` |
 | Beli pack lewat packet + drop anti-retake | `auto_buy_pack` | `notes/auto_buy_pack.md` |
 | Nama fungsi launcher, format packet, clipboard, ImGui | (lintas script) | `notes/growtopia_api.md` (daftar penuh: `notes/launcher_api_dump_2026-11-21.txt`) |
+| Signature hook, alias, enum tipe packet, fungsi `growtopia.*` | (dokumentasi resmi) | `notes/launcher_docs.md` |
+| Log/debug dengan Copy All (debug bawaan hanya bisa copy satu) | `tools/debug_logger.lua` | `notes/debug_logger.md` |
 
 ## Fakta cepat GrowLauncher (dari dump API 2026-11-21)
-- Lua **5.4**. Hampir semua fungsi punya dua ejaan (`SendPacket`/`sendPacket`, dst), keduanya bekerja.
+- Lua **5.4**. Hampir semua fungsi punya dua ejaan (`SendPacket`/`sendPacket`, dst), keduanya bekerja; `editValue` = `editToggle`.
+- Hook: daftarkan nama huruf kecil (`onvariant`, `onsendpacket`, `onsendpacketraw`, `ongamepacket`, `onvalue`, `ondraw`, `ondrawimgui`, `ondialog`) + `applyHook()`. Semantik `return true` tidak didokumentasikan.
+- Chat resmi: `growtopia.sendChat(text, toClient?)`.
 - Clipboard: `ImGui.SetClipboardText(text)` / `ImGui.GetClipboardText()`.
-- `writeToLocal(file, text)` ada, folder tujuannya belum diketahui. Tidak ada fungsi baca file bernama jelas.
+- `writeToLocal(file, text)` ada, folder tujuannya belum diketahui (dan lokasi `Preferences`). Tidak ada fungsi baca file bernama jelas.
 - `getWorld()` dan `getObjects()` TIDAK ada (script Boren hanya memakainya sebagai cadangan).
 
 ## Script yang terdaftar
@@ -40,6 +45,11 @@
 | surg_helper_zayn | `surg_helper_zayn_v2.0.lua` | `src/surg_helper_zayn/` (10 segmen) | Growtopia Lua | Zayn |
 | auto_clear | `auto_clear_kurangtahu.lua` | `src/auto_clear/` (1 file) | Growtopia Lua | @_kurangtahu_ |
 | auto_buy_pack | `auto_buy_pack_boren.lua` | `src/auto_buy_pack/` (12 segmen) | GrowLauncher Android/PC | Boren |
+
+## Alat (`tools/`)
+| Alat | File | Catatan |
+|------|------|---------|
+| Debug Logger v1.2 (log variant/kirim/raw/gamepacket/value + Copy All) | `tools/debug_logger.lua`, tes `tools/test_debug_logger.lua` | `notes/debug_logger.md` |
 
 ## Struktur modul
 - **auto_surg** (urutan: config → tools → detect → main): `auto()` ID tool + anti-stuck + packet; `surg(var)` 14 aturan prioritas + deteksi gagal.
@@ -64,3 +74,4 @@
 - 2026-11-19: raw/ dibagi jadi inbox/ (belum disortir) dan sorted/ (sudah), plus MANIFEST.md dan aturan anti-duplikasi.
 - 2026-11-20: 6 script dari inbox diproses: auto_surg_v1.0_beta (varian), surg_exact + Ceximo (varian), surg_helper_zayn, auto_clear, auto_buy_pack. Tambah notes/growtopia_api.md.
 - 2026-11-21: dump API launcher disimpan (`notes/launcher_api_dump_2026-11-21.txt`); `growtopia_api.md` ditulis ulang berdasarkan dump. Koreksi: beda huruf (`sendPacket` vs `SendPacket`) bukan tanda loader berbeda.
+- 2026-11-22: dokumentasi resmi GrowLauncher diringkas ke `notes/launcher_docs.md` (hook, alias, value/module functions, `growtopia.*`, enum packet). `growtopia_api.md` dikoreksi (nama hook huruf kecil, alias `editValue`=`editToggle`, hook baru `ongamepacket`/`onvalue`). Tambah `tools/debug_logger.lua` v1.2 + tes + `notes/debug_logger.md`.
